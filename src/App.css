@@ -1,0 +1,15 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;400;500;700;900&display=swap");
+
+.App {
+  height: 100%;
+  box-sizing: border-box;
+  font-family: "Poppins";
+  color: white;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  background: radial-gradient(
+    circle,
+    rgba(148, 102, 185, 1) 0%,
+    rgba(131, 58, 180, 1) 100%
+  );
+}
