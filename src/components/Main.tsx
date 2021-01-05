@@ -1,10 +1,6 @@
 import styled from "styled-components";
 
-import {
-  DragDropContext,
-  ResponderProvided,
-  DropResult,
-} from "react-beautiful-dnd";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import * as DNDActions from "../redux/actions";
 
 import { useSelector, useDispatch } from "react-redux";
@@ -16,17 +12,17 @@ export default function Main() {
 
   const dipatch = useDispatch();
 
-  const dragEndHadnler = (result: DropResult, provided: ResponderProvided) => {
+  const onDragEndHandler = (result: DropResult) => {
     if (!result.destination) return;
-    dipatch(DNDActions.onDragEnd(result, provided));
+    dipatch(DNDActions.onDragEnd(result));
   };
 
   return (
     <MainContainer>
-      <BoradName>Project</BoradName>
+      <BoardName>TASKS</BoardName>
       <Filter>Filters</Filter>
       <Columns>
-        <DragDropContext onDragEnd={dragEndHadnler}>
+        <DragDropContext onDragEnd={onDragEndHandler}>
           {columns &&
             Object.entries(columns).map(([id, column]) => {
               return <Column id={id} column={column} />;
@@ -41,11 +37,12 @@ const MainContainer = styled.main`
   display: grid;
   grid-template-rows: auto auto 1fr;
   padding: 0 16px;
+  overflow-y: hidden;
 `;
 
 const Filter = styled.div``;
 
-const BoradName = styled.div``;
+const BoardName = styled.div``;
 
 const Columns = styled.div`
   box-sizing: border-box;
