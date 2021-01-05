@@ -4,17 +4,17 @@ import { FC } from "react";
 import styled from "styled-components";
 import Card from "./Card";
 
-export type IColumn = {
+export type ColumnType = {
   name: string;
-  items?: any[];
+  items: any[];
 };
 
-interface ColumnType {
+interface IColumn {
   id: string;
-  column: IColumn;
+  column: ColumnType;
 }
 
-const Column: FC<ColumnType> = ({ id, column }) => {
+const Column: FC<IColumn> = ({ id, column }) => {
   return (
     <ColumnContainer>
       <ColumnTitle>{column.name}</ColumnTitle>
@@ -33,6 +33,7 @@ const Column: FC<ColumnType> = ({ id, column }) => {
                 padding: 8,
                 boxSizing: "border-box",
                 overflowY: "auto",
+                transition: "background 300ms linear",
               }}
             >
               {column.items?.map((item, i) => {

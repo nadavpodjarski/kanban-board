@@ -5,7 +5,7 @@ export default function Header() {
 }
 
 const HeaderContainer = styled.header`
-  height: 56px;
+  height: 80px;
   padding: 16px;
   box-sizing: border-box;
   color: white;

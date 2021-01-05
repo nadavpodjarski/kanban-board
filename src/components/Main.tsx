@@ -50,4 +50,6 @@ const BoradName = styled.div``;
 const Columns = styled.div`
   box-sizing: border-box;
   display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
 `;
