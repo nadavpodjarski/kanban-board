@@ -8,6 +8,5 @@ const HeaderContainer = styled.header`
   height: 56px;
   padding: 16px;
   box-sizing: border-box;
-  background: rgba(255, 255, 255, 0.3);
   color: white;
 `;
