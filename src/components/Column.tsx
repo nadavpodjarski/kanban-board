@@ -16,9 +16,10 @@ export type ColumnType = {
 interface IColumn {
   id: string;
   column: ColumnType;
+  boardId: string;
 }
 
-const Column: FC<IColumn> = ({ id, column }) => {
+const Column: FC<IColumn> = ({ id, column, boardId }) => {
   const [isAddCard, setIsAddCard] = useState(false);
 
   const toggleAddCard = () => {
@@ -32,31 +33,37 @@ const Column: FC<IColumn> = ({ id, column }) => {
         <AddButton onClick={toggleAddCard} />
         <MenuButton />
       </ColumnHeader>
-      <Droppable droppableId={id} key={id}>
+      <Droppable droppableId={id}>
         {(provided, snapshot) => {
           return (
-            <div
+            <DroppableColumn
               {...provided.droppableProps}
               ref={provided.innerRef}
               style={{
                 background: snapshot.isDraggingOver
                   ? "rgba(0,0,0,0.3)"
                   : "rgba(0,0,0,0.1)",
-                width: "100%",
-                flex: 1,
-                padding: 8,
-                boxSizing: "border-box",
-                overflowY: "auto",
-                transition: "background 300ms linear",
-                scrollbarWidth: "none",
               }}
             >
-              {isAddCard && <AddCard />}
+              {isAddCard && (
+                <AddCard
+                  closeAddCard={toggleAddCard}
+                  columnId={id}
+                  boardId={boardId}
+                />
+              )}
               {column.items?.map((item, i) => {
-                return <Card item={item} index={i} />;
+                return (
+                  <Card
+                    item={item}
+                    index={i}
+                    key={item.id}
+                    columnId={id}
+                    boardId={boardId}
+                  />
+                );
               })}
-              <div {...provided.placeholder} />
-            </div>
+            </DroppableColumn>
           );
         }}
       </Droppable>
@@ -90,6 +97,15 @@ const ColumnTitle = styled.span`
   font-weight: bold;
 `;
 
+const DroppableColumn = styled.div`
+  width: 100%;
+  flex: 1;
+  padding: 8px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  transition: background 300ms linear;
+  scrollbar-width: none;
+`;
 const AddButton = styled(Add)`
   color: rgba(0, 0, 0, 0.8);
   width: 20px;

@@ -1,21 +1,40 @@
 import { FC } from "react";
 import { Draggable } from "react-beautiful-dnd";
+
 import styled from "styled-components";
 
+import { useDispatch } from "react-redux";
+import * as DNDActions from "../redux/actions";
+
+import { EditOutline } from "@styled-icons/evaicons-outline";
+import { Delete } from "@styled-icons/material-outlined";
+
+export type CardType = {
+  id: string;
+  content: string;
+  createdAt: Date | number;
+  updatedAt: Date | number;
+};
+
 interface ICard {
-  item: {
-    id: string;
-    content: string;
-  };
+  item: CardType;
   index: number;
+  boardId: string;
+  columnId: string;
 }
 
-const Card: FC<ICard> = ({ item, index }) => {
+const Card: FC<ICard> = ({ item, index, boardId, columnId }) => {
+  const dispatch = useDispatch();
+
+  const onDeleteHandler = () => {
+    dispatch(DNDActions.onDeleteCard(boardId, columnId, item.id));
+  };
+
   return (
-    <Draggable key={item.id} draggableId={item.id} index={index}>
+    <Draggable draggableId={item.id} index={index}>
       {(provided) => {
         return (
-          <CardContainer
+          <DraggableCard
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
@@ -23,8 +42,12 @@ const Card: FC<ICard> = ({ item, index }) => {
               ...provided.draggableProps.style,
             }}
           >
-            {item.content}
-          </CardContainer>
+            <CardContent>{item.content}</CardContent>
+            <CardActions>
+              <DeleteButton onClick={onDeleteHandler} />
+              <EditButton />
+            </CardActions>
+          </DraggableCard>
         );
       }}
     </Draggable>
@@ -33,7 +56,7 @@ const Card: FC<ICard> = ({ item, index }) => {
 
 export default Card;
 
-const CardContainer = styled.div.attrs((props) => ({
+const DraggableCard = styled.div.attrs((props) => ({
   ...props,
 }))`
   user-select: none;
@@ -43,4 +66,28 @@ const CardContainer = styled.div.attrs((props) => ({
   background: white;
   color: grey;
   border-radius: 4px;
+  display: flex;
+`;
+
+const CardContent = styled.div`
+  flex: 1;
+`;
+
+const CardActions = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const DeleteButton = styled(Delete)`
+  width: 18px;
+  height: 18px;
+  color: rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  margin-bottom: 8px;
+`;
+const EditButton = styled(EditOutline)`
+  width: 18px;
+  height: 18px;
+  color: rgba(0, 0, 0, 0.6);
+  cursor: pointer;
 `;
