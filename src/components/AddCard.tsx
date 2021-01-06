@@ -2,6 +2,7 @@ import { FC, useState } from "react";
 import styled from "styled-components";
 
 import { useDispatch } from "react-redux";
+import { motion } from "framer-motion";
 
 import * as utils from "../utils";
 import * as DNDActions from "../redux/actions";
@@ -32,7 +33,16 @@ const AddCard: FC<{
   };
 
   return (
-    <AddCardContainer>
+    <AddCardContainer
+      initial={{ scale: 0 }}
+      animate={{ scale: 1 }}
+      exit={{ scale: 0 }}
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 20,
+      }}
+    >
       <TextArea value={value} onChange={onChangeHandler} />
       <ActionsWrapper>
         <AddButton onClick={onAddHandler}>Add</AddButton>
@@ -44,13 +54,15 @@ const AddCard: FC<{
 
 export default AddCard;
 
-const AddCardContainer = styled.div`
+const AddCardContainer = styled(motion.div)`
   height: 140px;
   width: 100%;
-  margin-bottom: 16px;
+  padding: 0 8px;
+  margin-bottom: 8px;
   display: grid;
   grid-template-rows: 1fr auto;
   gap: 8px;
+  box-sizing: border-box;
 `;
 
 const TextArea = styled.textarea.attrs((props) => ({

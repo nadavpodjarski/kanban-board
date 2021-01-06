@@ -8,6 +8,8 @@ import AddCard from "./AddCard";
 import { Add } from "@styled-icons/ionicons-solid";
 import { ThreeDots } from "@styled-icons/bootstrap";
 
+import { AnimatePresence } from "framer-motion";
+
 export type ColumnType = {
   name: string;
   items: any[];
@@ -33,9 +35,17 @@ const Column: FC<IColumn> = ({ id, column, boardId }) => {
         <AddButton onClick={toggleAddCard} />
         <MenuButton />
       </ColumnHeader>
-      {isAddCard && (
-        <AddCard closeAddCard={toggleAddCard} columnId={id} boardId={boardId} />
-      )}
+
+      <AnimatePresence exitBeforeEnter>
+        {isAddCard && (
+          <AddCard
+            closeAddCard={toggleAddCard}
+            columnId={id}
+            boardId={boardId}
+          />
+        )}
+      </AnimatePresence>
+
       <Droppable droppableId={id}>
         {(provided, snapshot) => {
           return (

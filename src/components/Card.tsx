@@ -3,7 +3,6 @@ import { Draggable } from "react-beautiful-dnd";
 
 import styled from "styled-components";
 import { motion } from "framer-motion";
-import { useState } from "react";
 
 import { useDispatch } from "react-redux";
 import * as Actions from "../redux/actions";
@@ -12,6 +11,8 @@ import { EditOutline } from "@styled-icons/evaicons-outline";
 import { Delete } from "@styled-icons/material-outlined";
 
 import { CardHeading } from "@styled-icons/bootstrap";
+
+import * as _ from "lodash";
 
 export type CardType = {
   id: string;
@@ -35,7 +36,13 @@ const Card: FC<ICard> = ({ item, index, boardId, columnId }) => {
   };
 
   const onEditHandler = () => {
-    dispatch(Actions.openModal("edit-card", { boardId, columnId, item }));
+    dispatch(
+      Actions.openModal("edit-card", {
+        boardId,
+        columnId,
+        item: _.cloneDeep(item),
+      })
+    );
   };
 
   return (

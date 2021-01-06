@@ -112,7 +112,7 @@ export const dndReducer = (
 
       return { ...state };
     }
-    case types.DLETE_CARD: {
+    case types.DELETE_CARD: {
       const { boardId, columnId, cardId } = action.payload;
       const board = state.boards[boardId];
       const columns = board.columns;
@@ -123,6 +123,20 @@ export const dndReducer = (
           ...cards.filter((card) => card.id !== cardId),
         ];
       }
+      return { ...state };
+    }
+    case types.EDIT_CARD: {
+      const { boardId, columnId, updatedCard } = action.payload;
+      const board = state.boards[boardId];
+      const columns = board.columns;
+
+      if (columns) {
+        let item = columns[columnId].items.find(
+          (item) => item.id === updatedCard.id
+        );
+        Object.assign(item, updatedCard);
+      }
+
       return { ...state };
     }
 

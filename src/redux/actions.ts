@@ -34,11 +34,26 @@ export const onDeleteCard = (
   cardId: string
 ) => {
   return {
-    type: types.DLETE_CARD,
+    type: types.DELETE_CARD,
     payload: {
       boardId,
       columnId,
       cardId,
+    },
+  };
+};
+
+export const onEditCard = (
+  boardId: string,
+  columnId: string,
+  updatedCard: CardType
+) => {
+  return {
+    type: types.EDIT_CARD,
+    payload: {
+      boardId,
+      columnId,
+      updatedCard,
     },
   };
 };
