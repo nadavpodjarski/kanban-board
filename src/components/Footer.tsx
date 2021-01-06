@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export default function Footer() {
-  return <FooterContainer>Made By N@d@v 2020</FooterContainer>;
+  return <FooterContainer>Made By N@d@v 2020 🤖</FooterContainer>;
 }
 
 const FooterContainer = styled.footer`

@@ -2,11 +2,11 @@ import { FC } from "react";
 import { Draggable } from "react-beautiful-dnd";
 
 import styled from "styled-components";
-
-import React from "react";
+import { motion } from "framer-motion";
+import { useState } from "react";
 
 import { useDispatch } from "react-redux";
-import * as DNDActions from "../redux/actions";
+import * as Actions from "../redux/actions";
 
 import { EditOutline } from "@styled-icons/evaicons-outline";
 import { Delete } from "@styled-icons/material-outlined";
@@ -31,12 +31,16 @@ const Card: FC<ICard> = ({ item, index, boardId, columnId }) => {
   const dispatch = useDispatch();
 
   const onDeleteHandler = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
-    dispatch(DNDActions.onDeleteCard(boardId, columnId, item.id));
+    dispatch(Actions.onDeleteCard(boardId, columnId, item.id));
+  };
+
+  const onEditHandler = () => {
+    dispatch(Actions.openModal("edit-card", { boardId, columnId, item }));
   };
 
   return (
     <Draggable draggableId={item.id} index={index}>
-      {(provided) => {
+      {(provided, snapshot) => {
         return (
           <DraggableCard
             ref={provided.innerRef}
@@ -47,10 +51,10 @@ const Card: FC<ICard> = ({ item, index, boardId, columnId }) => {
             }}
           >
             <CardIcon />
-            <CardContent>{JSON.parse(item.content)}</CardContent>
+            <CardContent>{item.content}</CardContent>
             <CardActions>
               <DeleteButton onClick={onDeleteHandler} />
-              <EditButton />
+              <EditButton onClick={onEditHandler} />
             </CardActions>
           </DraggableCard>
         );
@@ -60,16 +64,13 @@ const Card: FC<ICard> = ({ item, index, boardId, columnId }) => {
 };
 
 export default Card;
-
-const DraggableCard = styled.div.attrs((props) => ({
-  ...props,
-}))`
+const DraggableCard = styled<any>(motion.div)`
   user-select: none;
   padding: 8px 8px 16px 8px;
   margin: 0 0 8px 0;
   min-height: 80px;
   background: white;
-  color: grey;
+  color: black;
   border-radius: 4px;
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -80,9 +81,9 @@ const DraggableCard = styled.div.attrs((props) => ({
 
 const CardContent = styled.pre`
   display: inline-block;
-  overflow-wrap: break-word !important;
-  word-break: break-all !important;
-  white-space: pre-wrap !important;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  white-space: pre-wrap;
   font-family: inherit;
   font-size: 14px;
   line-height: 1.4;

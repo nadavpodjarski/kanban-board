@@ -130,3 +130,35 @@ export const dndReducer = (
       return state;
   }
 };
+
+export interface IUIState {
+  isModalOpen: boolean;
+  modal: any;
+}
+
+const uiInitialState: IUIState = {
+  isModalOpen: true,
+  modal: {},
+};
+
+export const uiReducer = (
+  state = uiInitialState,
+  action: { type: string; payload: any }
+): IUIState => {
+  switch (action.type) {
+    case types.OPEN_MODAL:
+      return {
+        ...state,
+        isModalOpen: true,
+        modal: action.payload,
+      };
+    case types.CLOSE_MODAL:
+      return {
+        ...state,
+        isModalOpen: false,
+        modal: {},
+      };
+    default:
+      return state;
+  }
+};

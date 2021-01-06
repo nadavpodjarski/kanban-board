@@ -46,3 +46,19 @@ export const onDeleteCard = (
 export const onAddColumn = () => {};
 
 export const onDeleteColumn = () => {};
+
+export const openModal = (type: string, props: {}) => {
+  return {
+    type: types.OPEN_MODAL,
+    payload: {
+      type,
+      props,
+    },
+  };
+};
+
+export const closeModal = () => {
+  return {
+    type: types.CLOSE_MODAL,
+  };
+};

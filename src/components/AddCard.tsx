@@ -22,10 +22,7 @@ const AddCard: FC<{
 
   const onAddHandler = () => {
     if (!value.trim()) return;
-
-    const content = JSON.stringify(value);
-    const newCard = utils.createCard(content);
-
+    const newCard = utils.createCard(value);
     dispatch(DNDActions.onAddCard(boardId, columnId, newCard));
     setValue("");
   };

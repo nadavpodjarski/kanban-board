@@ -70,6 +70,7 @@ const Column: FC<IColumn> = ({ id, column, boardId }) => {
 export default Column;
 
 const ColumnContainer = styled.div`
+  min-width: 350px;
   width: 350px;
   position: relative;
   height: 100%;
@@ -99,7 +100,7 @@ const DroppableColumn = styled.div`
   padding: 8px;
   box-sizing: border-box;
   overflow-y: auto;
-  transition: background 300ms linear;
+  transition: background 200ms linear;
   scrollbar-width: none;
 `;
 const AddButton = styled(Add)`
