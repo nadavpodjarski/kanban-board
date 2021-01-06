@@ -33,6 +33,9 @@ const Column: FC<IColumn> = ({ id, column, boardId }) => {
         <AddButton onClick={toggleAddCard} />
         <MenuButton />
       </ColumnHeader>
+      {isAddCard && (
+        <AddCard closeAddCard={toggleAddCard} columnId={id} boardId={boardId} />
+      )}
       <Droppable droppableId={id}>
         {(provided, snapshot) => {
           return (
@@ -45,13 +48,6 @@ const Column: FC<IColumn> = ({ id, column, boardId }) => {
                   : "rgba(0,0,0,0.1)",
               }}
             >
-              {isAddCard && (
-                <AddCard
-                  closeAddCard={toggleAddCard}
-                  columnId={id}
-                  boardId={boardId}
-                />
-              )}
               {column.items?.map((item, i) => {
                 return (
                   <Card
@@ -74,7 +70,7 @@ const Column: FC<IColumn> = ({ id, column, boardId }) => {
 export default Column;
 
 const ColumnContainer = styled.div`
-  min-width: 350px;
+  width: 350px;
   position: relative;
   height: 100%;
   display: flex;

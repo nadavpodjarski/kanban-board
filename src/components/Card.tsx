@@ -9,6 +9,8 @@ import * as DNDActions from "../redux/actions";
 import { EditOutline } from "@styled-icons/evaicons-outline";
 import { Delete } from "@styled-icons/material-outlined";
 
+import { CardHeading } from "@styled-icons/bootstrap";
+
 export type CardType = {
   id: string;
   content: string;
@@ -42,6 +44,7 @@ const Card: FC<ICard> = ({ item, index, boardId, columnId }) => {
               ...provided.draggableProps.style,
             }}
           >
+            <CardIcon />
             <CardContent>{item.content}</CardContent>
             <CardActions>
               <DeleteButton onClick={onDeleteHandler} />
@@ -60,22 +63,39 @@ const DraggableCard = styled.div.attrs((props) => ({
   ...props,
 }))`
   user-select: none;
-  padding: 8px;
+  padding: 8px 8px 16px 8px;
   margin: 0 0 8px 0;
-  height: 80px;
+  min-height: 80px;
   background: white;
   color: grey;
   border-radius: 4px;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 6px;
+  width: 100%;
+  box-sizing: border-box;
 `;
 
-const CardContent = styled.div`
-  flex: 1;
+const CardContent = styled.p`
+  display: inline-block;
+  overflow-wrap: break-word !important;
+  word-break: break-all !important;
+  white-space: normal !important;
+  font-size: 14px;
+  line-height: 1.4;
+  padding: 0;
+  margin: 0;
 `;
 
 const CardActions = styled.div`
   display: flex;
   flex-direction: column;
+`;
+
+const CardIcon = styled(CardHeading)`
+  width: 18px;
+  height: 18px;
+  color: rgba(0, 0, 0, 0.6);
 `;
 
 const DeleteButton = styled(Delete)`

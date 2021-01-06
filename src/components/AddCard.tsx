@@ -45,16 +45,17 @@ const AddCard: FC<{
 export default AddCard;
 
 const AddCardContainer = styled.div`
-  height: 120px;
+  height: 140px;
   width: 100%;
   margin-bottom: 16px;
   display: grid;
   grid-template-rows: 1fr auto;
-  gap: 4px;
+  gap: 8px;
 `;
 
 const TextArea = styled.textarea.attrs((props) => ({
   placeholder: "Add Your Task",
+  cols: 10,
 }))`
   font-family: inherit;
   padding: 8px;
