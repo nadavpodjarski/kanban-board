@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import * as DNDActions from "../redux/actions";
@@ -18,10 +18,14 @@ export default function Main() {
   const [currentBoard, setCurrentBoard] = useState("");
   const [columns, setColumns] = useState<any>({});
 
-  const boardOptions = Object.entries(boards).map(([id, { name }]) => ({
-    id,
-    name,
-  }));
+  const boardOptions = useMemo(
+    () =>
+      Object.entries(boards).map(([id, { name }]) => ({
+        id,
+        name,
+      })),
+    [boards]
+  );
 
   useEffect(() => {
     if (boardOptions.length) {
@@ -52,11 +56,13 @@ export default function Main() {
   return (
     <MainContainer>
       <>
-        <Select defaultValue={currentBoard} onChange={onSelectBoard}>
-          {boardOptions.map((board) => {
-            return <Option value={board.id}>{board.name}</Option>;
-          })}
-        </Select>
+        {currentBoard && (
+          <Select defaultValue={currentBoard} onChange={onSelectBoard}>
+            {boardOptions.map((board) => {
+              return <Option value={board.id}>{board.name}</Option>;
+            })}
+          </Select>
+        )}
         <BoardName>{currentBoard && boards[currentBoard].name}</BoardName>
         <Columns>
           <DragDropContext onDragEnd={onDragEndHandler}>
