@@ -3,6 +3,8 @@ import { Draggable } from "react-beautiful-dnd";
 
 import styled from "styled-components";
 
+import React from "react";
+
 import { useDispatch } from "react-redux";
 import * as DNDActions from "../redux/actions";
 
@@ -13,7 +15,7 @@ import { CardHeading } from "@styled-icons/bootstrap";
 
 export type CardType = {
   id: string;
-  content: string;
+  content: any;
   createdAt: Date | number;
   updatedAt: Date | number;
 };
@@ -28,7 +30,7 @@ interface ICard {
 const Card: FC<ICard> = ({ item, index, boardId, columnId }) => {
   const dispatch = useDispatch();
 
-  const onDeleteHandler = () => {
+  const onDeleteHandler = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     dispatch(DNDActions.onDeleteCard(boardId, columnId, item.id));
   };
 
@@ -45,7 +47,7 @@ const Card: FC<ICard> = ({ item, index, boardId, columnId }) => {
             }}
           >
             <CardIcon />
-            <CardContent>{item.content}</CardContent>
+            <CardContent>{JSON.parse(item.content)}</CardContent>
             <CardActions>
               <DeleteButton onClick={onDeleteHandler} />
               <EditButton />
@@ -76,11 +78,12 @@ const DraggableCard = styled.div.attrs((props) => ({
   box-sizing: border-box;
 `;
 
-const CardContent = styled.p`
+const CardContent = styled.pre`
   display: inline-block;
   overflow-wrap: break-word !important;
   word-break: break-all !important;
-  white-space: normal !important;
+  white-space: pre-wrap !important;
+  font-family: inherit;
   font-size: 14px;
   line-height: 1.4;
   padding: 0;
@@ -104,10 +107,16 @@ const DeleteButton = styled(Delete)`
   color: rgba(0, 0, 0, 0.6);
   cursor: pointer;
   margin-bottom: 8px;
+  &:hover {
+    color: black;
+  }
 `;
 const EditButton = styled(EditOutline)`
   width: 18px;
   height: 18px;
   color: rgba(0, 0, 0, 0.6);
   cursor: pointer;
+  &:hover {
+    color: black;
+  }
 `;

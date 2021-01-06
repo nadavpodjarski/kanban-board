@@ -2,7 +2,7 @@ import { v4 as uuid } from "uuid";
 
 import { CardType } from "../components/Card";
 
-export const createCard = (content: string): CardType => {
+export const createCard = (content: any): CardType => {
   return {
     id: uuid(),
     content,
