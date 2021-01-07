@@ -38,12 +38,12 @@ const EditColumnModal: FC<{
   };
 
   return (
-    <AddColumnModalContainer onClick={(e) => e.stopPropagation()}>
+    <EditColumnModalContainer onClick={(e) => e.stopPropagation()}>
       <Header>
         <Title>Add Column</Title>
         <CloseButton onClick={closeModalHandler} />
       </Header>
-      <AddColumnBody>
+      <EditColumnBody>
         <Input
           placeholder="Name Your New Column"
           value={name}
@@ -53,8 +53,8 @@ const EditColumnModal: FC<{
           <ConfirmButton onClick={onConfirmHandler}>Add</ConfirmButton>
           <CancelButton onClick={closeModalHandler}>Cancel</CancelButton>
         </ActionsWrapper>
-      </AddColumnBody>
-    </AddColumnModalContainer>
+      </EditColumnBody>
+    </EditColumnModalContainer>
   );
 };
 
@@ -85,12 +85,12 @@ const Input = styled.input`
   margin-top: 24px;
 `;
 
-const AddColumnBody = styled.div`
+const EditColumnBody = styled.div`
   padding: 0 16px;
   flex: 1;
 `;
 
-const AddColumnModalContainer = styled.div`
+const EditColumnModalContainer = styled.div`
   background: white;
   height: auto;
   width: 300px;

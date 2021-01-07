@@ -35,7 +35,7 @@ export interface IDNDReducer {
   boards: {
     [id: string]: {
       name: string;
-      columns?: { [id: string]: ColumnType };
+      columns: { [id: string]: ColumnType };
     };
   };
 }
@@ -66,36 +66,34 @@ export const dndReducer = (
       const { source, destination } = action.payload.result;
       const { boardId } = action.payload;
       const board = state.boards[boardId];
-      let columns = board.columns;
-      if (columns) {
-        if (source.droppableId !== destination.droppableId) {
-          // Different Columns
-          const sourceColumn = _.cloneDeep(columns[source.droppableId]);
-          const destColumn = _.cloneDeep(columns[destination.droppableId]);
-          const sourceItems = _.cloneDeep(sourceColumn.items);
-          const destItems = _.cloneDeep(destColumn.items);
-          const [removed] = sourceItems.splice(source.index, 1);
-          destItems.splice(destination.index, 0, removed);
+      const columns = board.columns;
+      if (source.droppableId !== destination.droppableId) {
+        // Different Columns
+        const sourceColumn = _.cloneDeep(columns[source.droppableId]);
+        const destColumn = _.cloneDeep(columns[destination.droppableId]);
+        const sourceItems = _.cloneDeep(sourceColumn.items);
+        const destItems = _.cloneDeep(destColumn.items);
+        const [removed] = sourceItems.splice(source.index, 1);
+        destItems.splice(destination.index, 0, removed);
 
-          columns[source.droppableId] = {
-            ...sourceColumn,
-            items: sourceItems,
-          };
-          columns[destination.droppableId] = {
-            ...destColumn,
-            items: destItems,
-          };
-        } else {
-          // Same Columns
-          const column = columns[source.droppableId];
-          const copiedItems = _.cloneDeep(column.items);
-          const [moved] = copiedItems.splice(source.index, 1);
-          copiedItems.splice(destination.index, 0, moved);
-          columns[source.droppableId] = {
-            ...column,
-            items: copiedItems,
-          };
-        }
+        columns[source.droppableId] = {
+          ...sourceColumn,
+          items: sourceItems,
+        };
+        columns[destination.droppableId] = {
+          ...destColumn,
+          items: destItems,
+        };
+      } else {
+        // Same Columns
+        const column = columns[source.droppableId];
+        const copiedItems = _.cloneDeep(column.items);
+        const [moved] = copiedItems.splice(source.index, 1);
+        copiedItems.splice(destination.index, 0, moved);
+        columns[source.droppableId] = {
+          ...column,
+          items: copiedItems,
+        };
       }
 
       return { ...state };
@@ -105,10 +103,8 @@ export const dndReducer = (
       const board = state.boards[boardId];
       const columns = board.columns;
 
-      if (columns) {
-        const cards = columns[columnId].items;
-        columns[columnId].items = [newCard, ...cards];
-      }
+      const cards = columns[columnId].items;
+      columns[columnId].items = [newCard, ...cards];
 
       return { ...state };
     }
@@ -117,12 +113,9 @@ export const dndReducer = (
       const board = state.boards[boardId];
       const columns = board.columns;
 
-      if (columns) {
-        const cards = columns[columnId].items;
-        columns[columnId].items = [
-          ...cards.filter((card) => card.id !== cardId),
-        ];
-      }
+      const cards = columns[columnId].items;
+      columns[columnId].items = [...cards.filter((card) => card.id !== cardId)];
+
       return { ...state };
     }
     case types.EDIT_CARD: {
@@ -130,12 +123,10 @@ export const dndReducer = (
       const board = state.boards[boardId];
       const columns = board.columns;
 
-      if (columns) {
-        let item = columns[columnId].items.find(
-          (item) => item.id === updatedCard.id
-        );
-        Object.assign(item, updatedCard);
-      }
+      let item = columns[columnId].items.find(
+        (item) => item.id === updatedCard.id
+      );
+      Object.assign(item, updatedCard);
 
       return { ...state };
     }
@@ -146,6 +137,13 @@ export const dndReducer = (
       if (columns) {
         Object.assign(columns, newColumn);
       }
+      return { ...state };
+    }
+    case types.DELETE_COLUMN: {
+      const { boardId, columnId } = action.payload;
+      const board = state.boards[boardId];
+      const columns = board.columns;
+      delete columns[columnId];
       return { ...state };
     }
 

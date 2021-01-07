@@ -6,3 +6,4 @@ export const OPEN_MODAL = "OPEN_MODAL";
 export const CLOSE_MODAL = "CLOSE_MODAL";
 export const ADD_COLUMN = "ADD_COLUMN";
 export const EDIT_COLUMN = "EDIT_COLUMN";
+export const DELETE_COLUMN = "DELETE_COLUMN";

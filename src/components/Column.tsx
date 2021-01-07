@@ -6,6 +6,9 @@ import Card from "./Card";
 import AddCard from "./AddCard";
 import ClickAwayListener from "./ClickAwayListener";
 
+import { useDispatch } from "react-redux";
+import { onDeleteColumn } from "../redux/actions";
+
 import { Add } from "@styled-icons/ionicons-solid";
 import { ThreeDots } from "@styled-icons/bootstrap";
 
@@ -52,8 +55,9 @@ const menuItem = {
 
 const Column: FC<IColumn> = ({ id, column, boardId }) => {
   const [isAddCard, setIsAddCard] = useState(false);
-
   const [isShowMenu, setIsShowMenu] = useState(false);
+
+  const dispatch = useDispatch();
 
   const toggleAddCard = () => {
     setIsAddCard((prevState) => !prevState);
@@ -63,8 +67,12 @@ const Column: FC<IColumn> = ({ id, column, boardId }) => {
     setIsShowMenu(false);
   };
 
-  const toggleMenu = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const toggleMenu = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     setIsShowMenu((prevState) => !prevState);
+  };
+
+  const onDeleteHandler = () => {
+    dispatch(onDeleteColumn(boardId, id));
   };
 
   return (
@@ -72,8 +80,8 @@ const Column: FC<IColumn> = ({ id, column, boardId }) => {
       <ColumnHeader>
         <ColumnTitle>{column.name}</ColumnTitle>
         <AddIcon onClick={toggleAddCard} />
-        <MenuIconWrapper onClick={toggleMenu}>
-          <MenuIcon />
+        <MenuIconWrapper>
+          <MenuIcon onClick={toggleMenu} />
         </MenuIconWrapper>
         <AnimatePresence exitBeforeEnter>
           {isShowMenu && (
@@ -84,8 +92,10 @@ const Column: FC<IColumn> = ({ id, column, boardId }) => {
                 animate="open"
                 exit="closed"
               >
-                <MenuItem variants={menuItem}>Delete</MenuItem>
                 <MenuItem variants={menuItem}>Edit</MenuItem>
+                <MenuItem variants={menuItem} onClick={onDeleteHandler}>
+                  Delete
+                </MenuItem>
               </Menu>
             </ClickAwayListener>
           )}

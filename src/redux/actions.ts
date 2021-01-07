@@ -83,7 +83,15 @@ export const onEditColumn = (
   };
 };
 
-export const onDeleteColumn = () => {};
+export const onDeleteColumn = (boardId: string, columnId: string) => {
+  return {
+    type: types.DELETE_COLUMN,
+    payload: {
+      boardId,
+      columnId,
+    },
+  };
+};
 
 export const openModal = (type: string, props?: {}) => {
   return {
