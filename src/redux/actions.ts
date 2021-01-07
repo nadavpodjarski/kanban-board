@@ -68,6 +68,21 @@ export const onAddColumn = (boardId: string, newColumn: any) => {
   };
 };
 
+export const onEditColumn = (
+  boardId: string,
+  columnId: string,
+  name: string
+) => {
+  return {
+    type: types.EDIT_COLUMN,
+    payload: {
+      boardId,
+      columnId,
+      name,
+    },
+  };
+};
+
 export const onDeleteColumn = () => {};
 
 export const openModal = (type: string, props?: {}) => {
