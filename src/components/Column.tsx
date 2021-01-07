@@ -96,6 +96,7 @@ const ColumnHeader = styled.div`
   justify-content: space-around;
   align-items: center;
   margin: 24px 0;
+  height: 40px;
 `;
 
 const ColumnTitle = styled.span`
@@ -110,7 +111,7 @@ const DroppableColumn = styled.div`
   padding: 8px;
   box-sizing: border-box;
   overflow-y: auto;
-  transition: background 200ms linear;
+  transition: all 200ms linear;
   scrollbar-width: none;
 `;
 const AddButton = styled(Add)`

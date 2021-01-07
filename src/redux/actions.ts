@@ -58,11 +58,19 @@ export const onEditCard = (
   };
 };
 
-export const onAddColumn = () => {};
+export const onAddColumn = (boardId: string, newColumn: any) => {
+  return {
+    type: types.ADD_COLUMN,
+    payload: {
+      boardId,
+      newColumn,
+    },
+  };
+};
 
 export const onDeleteColumn = () => {};
 
-export const openModal = (type: string, props: {}) => {
+export const openModal = (type: string, props?: {}) => {
   return {
     type: types.OPEN_MODAL,
     payload: {

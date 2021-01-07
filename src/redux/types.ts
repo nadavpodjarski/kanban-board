@@ -4,3 +4,4 @@ export const DELETE_CARD = "DELETE_CARD";
 export const EDIT_CARD = "EDIT_CARD";
 export const OPEN_MODAL = "OPEN_MODAL";
 export const CLOSE_MODAL = "CLOSE_MODAL";
+export const ADD_COLUMN = "ADD_COLUMN";

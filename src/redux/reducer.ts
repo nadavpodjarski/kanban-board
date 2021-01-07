@@ -139,6 +139,15 @@ export const dndReducer = (
 
       return { ...state };
     }
+    case types.ADD_COLUMN: {
+      const { boardId, newColumn } = action.payload;
+      const board = state.boards[boardId];
+      const columns = board.columns;
+      if (columns) {
+        Object.assign(columns, newColumn);
+      }
+      return { ...state };
+    }
 
     default:
       return state;

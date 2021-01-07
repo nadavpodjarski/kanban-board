@@ -74,6 +74,7 @@ const TextArea = styled.textarea.attrs((props) => ({
   resize: none;
   width: 100%;
   box-sizing: border-box;
+  border-radius: 8px;
 `;
 
 const ActionsWrapper = styled.div`

@@ -6,12 +6,15 @@ import { closeModal } from "../redux/actions";
 
 import { motion, AnimatePresence } from "framer-motion";
 
-import EditCard from "./EditCard";
+import EditCardModal from "./EditCardModal";
+import AddColumnModal from "./AddColumnModal";
 
 const matchModalContent = (type: string) => {
   switch (type) {
     case "edit-card":
-      return EditCard;
+      return EditCardModal;
+    case "add-column":
+      return AddColumnModal;
     default:
       return null;
   }

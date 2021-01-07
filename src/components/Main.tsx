@@ -7,8 +7,8 @@ import * as DNDActions from "../redux/actions";
 import { useSelector, useDispatch } from "react-redux";
 
 import { ColumnType } from "./Column";
-
 import Column from "../components/Column";
+import AddColumn from "../components/AddColumn";
 
 export default function Main() {
   const dipatch = useDispatch();
@@ -56,14 +56,29 @@ export default function Main() {
   return (
     <MainContainer>
       <>
-        {currentBoard && (
-          <Select defaultValue={currentBoard} onChange={onSelectBoard}>
-            {boardOptions.map((board) => {
-              return <Option value={board.id}>{board.name}</Option>;
-            })}
-          </Select>
-        )}
-        <BoardName>{currentBoard && boards[currentBoard].name}</BoardName>
+        <BoardHeader>
+          {currentBoard && (
+            <>
+              <SelectWrapper>
+                <Label htmlFor="boards-select">Boards</Label>
+                <Select
+                  id="boards-select"
+                  defaultValue={currentBoard}
+                  onChange={onSelectBoard}
+                >
+                  {boardOptions.map((board) => {
+                    return (
+                      <Option key={board.id} value={board.id}>
+                        {board.name}
+                      </Option>
+                    );
+                  })}
+                </Select>
+              </SelectWrapper>
+              <BoardName>{boards[currentBoard]?.name}</BoardName>
+            </>
+          )}
+        </BoardHeader>
         <Columns>
           <DragDropContext onDragEnd={onDragEndHandler}>
             {columns &&
@@ -78,6 +93,7 @@ export default function Main() {
                 );
               })}
           </DragDropContext>
+          <AddColumn boardId={currentBoard} />
         </Columns>
       </>
     </MainContainer>
@@ -86,15 +102,21 @@ export default function Main() {
 
 const MainContainer = styled.main`
   display: grid;
-  grid-template-rows: auto auto 1fr;
+  grid-template-rows: auto 1fr;
   padding: 0 16px;
   overflow-y: hidden;
 `;
 
-const BoardName = styled.div`
-  text-align: center;
+const BoardHeader = styled.div`
   font-size: 36px;
   font-weight: bold;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+`;
+
+const BoardName = styled.h2`
+  margin: 0;
+  text-align: center;
 `;
 
 const Columns = styled.div`
@@ -105,9 +127,28 @@ const Columns = styled.div`
   height: 100%;
 `;
 
+const SelectWrapper = styled.div`
+  position: relative;
+  height: auto;
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+`;
+
 const Select = styled.select`
   width: 200px;
   height: 42px;
+  background: rgba(0, 0, 0, 0.3);
+  color: white;
+  border: none;
+  box-shadow: none;
+  font-size: 18px;
+`;
+
+const Label = styled.label`
+  font-size: 16px;
+  margin-bottom: 6px;
 `;
 
 const Option = styled.option`

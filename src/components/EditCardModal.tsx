@@ -95,7 +95,7 @@ const Title = styled.span`
 
 const Header = styled.div`
   width: 100%;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   padding: 16px;
   display: flex;
   align-items: center;
