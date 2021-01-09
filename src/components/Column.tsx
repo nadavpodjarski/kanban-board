@@ -4,7 +4,7 @@ import { FC, useState } from "react";
 import styled from "styled-components";
 import Card from "./Card";
 import AddCard from "./AddCard";
-import ClickOutsideOverlay from "./ClickOutsideOverlay";
+import ClickAwayListener from "./ClickAwayListener";
 
 import { useDispatch } from "react-redux";
 import { onDeleteColumn, openModal } from "../redux/actions";
@@ -110,7 +110,7 @@ const Column: FC<IColumn> = ({ id: columnId, column, boardId, index }) => {
               <AnimatePresence exitBeforeEnter>
                 {isShowMenu && (
                   <>
-                    <ClickOutsideOverlay onClickOutside={closeMenu} />
+                    <ClickAwayListener onClickAway={closeMenu} />
                     <Menu
                       variants={menu}
                       initial="closed"

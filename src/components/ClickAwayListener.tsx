@@ -6,12 +6,12 @@ import { FC, useEffect } from "react";
  */
 
 const ClickOutsideOverlay: FC<{
-  onClickOutside: () => void;
-}> = ({ onClickOutside }) => {
+  onClickAway: () => void;
+}> = ({ onClickAway }) => {
   useEffect(() => {
-    document.body.addEventListener("mousedown", onClickOutside);
+    document.body.addEventListener("mousedown", onClickAway);
     return () => {
-      document.body.removeEventListener("mousedown", onClickOutside);
+      document.body.removeEventListener("mousedown", onClickAway);
     };
     //eslint-disable-next-line
   }, []);
