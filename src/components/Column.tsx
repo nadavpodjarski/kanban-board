@@ -1,10 +1,10 @@
-import { Droppable } from "react-beautiful-dnd";
+import { Droppable, Draggable } from "react-beautiful-dnd";
 import { FC, useState } from "react";
 
 import styled from "styled-components";
 import Card from "./Card";
 import AddCard from "./AddCard";
-import ClickAwayListener from "./ClickAwayListener";
+import ClickOutsideOverlay from "./ClickOutsideOverlay";
 
 import { useDispatch } from "react-redux";
 import { onDeleteColumn } from "../redux/actions";
@@ -23,6 +23,7 @@ interface IColumn {
   id: string;
   column: ColumnType;
   boardId: string;
+  index: number;
 }
 
 const menu = {
@@ -53,9 +54,10 @@ const menuItem = {
   },
 };
 
-const Column: FC<IColumn> = ({ id, column, boardId }) => {
+const Column: FC<IColumn> = ({ id: columnId, column, boardId, index }) => {
   const [isAddCard, setIsAddCard] = useState(false);
   const [isShowMenu, setIsShowMenu] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
 
   const dispatch = useDispatch();
 
@@ -63,83 +65,107 @@ const Column: FC<IColumn> = ({ id, column, boardId }) => {
     setIsAddCard((prevState) => !prevState);
   };
 
-  const closeMenu = (e: MouseEvent) => {
+  const closeMenu = () => {
     setIsShowMenu(false);
   };
 
   const toggleMenu = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+    e.stopPropagation();
     setIsShowMenu((prevState) => !prevState);
   };
 
   const onDeleteHandler = () => {
-    dispatch(onDeleteColumn(boardId, id));
+    dispatch(onDeleteColumn(boardId, columnId));
   };
 
+  const openEditModal = () => {};
+
   return (
-    <ColumnContainer>
-      <ColumnHeader>
-        <ColumnTitle>{column.name}</ColumnTitle>
-        <AddIcon onClick={toggleAddCard} />
-        <MenuIconWrapper>
-          <MenuIcon onClick={toggleMenu} />
-        </MenuIconWrapper>
-        <AnimatePresence exitBeforeEnter>
-          {isShowMenu && (
-            <ClickAwayListener onClickAway={closeMenu}>
-              <Menu
-                variants={menu}
-                initial="closed"
-                animate="open"
-                exit="closed"
-              >
-                <MenuItem variants={menuItem}>Edit</MenuItem>
-                <MenuItem variants={menuItem} onClick={onDeleteHandler}>
-                  Delete
-                </MenuItem>
-              </Menu>
-            </ClickAwayListener>
-          )}
-        </AnimatePresence>
-      </ColumnHeader>
-
-      <AnimatePresence exitBeforeEnter>
-        {isAddCard && (
-          <AddCard
-            closeAddCard={toggleAddCard}
-            columnId={id}
-            boardId={boardId}
-          />
-        )}
-      </AnimatePresence>
-
-      <Droppable droppableId={id}>
-        {(provided, snapshot) => {
-          return (
-            <DroppableColumn
-              {...provided.droppableProps}
-              ref={provided.innerRef}
-              style={{
-                background: snapshot.isDraggingOver
-                  ? "rgba(0,0,0,0.3)"
-                  : "rgba(0,0,0,0.1)",
-              }}
-            >
-              {column.items?.map((item, i) => {
+    <Draggable draggableId={columnId} index={index}>
+      {(provided, snapshot) => {
+        setIsDragging(snapshot.isDragging);
+        return (
+          <ColumnContainer
+            {...provided.draggableProps}
+            ref={provided.innerRef}
+            style={{
+              ...provided.draggableProps.style,
+            }}
+          >
+            <ColumnHeader>
+              <ColumnTitleWrapper>
+                <ColumnTitle {...provided.dragHandleProps}>
+                  {column.name}
+                </ColumnTitle>
+              </ColumnTitleWrapper>
+              <AddIcon onClick={toggleAddCard} />
+              <MenuIconWrapper>
+                <MenuIcon onClick={toggleMenu} />
+              </MenuIconWrapper>
+              <AnimatePresence exitBeforeEnter>
+                {isShowMenu && (
+                  <>
+                    <ClickOutsideOverlay onClickOutside={closeMenu} />
+                    <Menu
+                      variants={menu}
+                      initial="closed"
+                      animate="open"
+                      exit="closed"
+                    >
+                      <MenuItem variants={menuItem} onClick={openEditModal}>
+                        Edit
+                      </MenuItem>
+                      <MenuItem variants={menuItem} onClick={onDeleteHandler}>
+                        Delete
+                      </MenuItem>
+                    </Menu>
+                  </>
+                )}
+              </AnimatePresence>
+            </ColumnHeader>
+            <AnimatePresence exitBeforeEnter>
+              {isAddCard && (
+                <AddCard
+                  closeAddCard={toggleAddCard}
+                  columnId={columnId}
+                  boardId={boardId}
+                />
+              )}
+            </AnimatePresence>
+            <Droppable droppableId={columnId} type="DROPPABLE_COLUMN">
+              {(provided, snapshot) => {
                 return (
-                  <Card
-                    item={item}
-                    index={i}
-                    key={item.id}
-                    columnId={id}
-                    boardId={boardId}
-                  />
+                  <DroppableColumn
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    style={{
+                      background: snapshot.isDraggingOver
+                        ? "rgba(0,0,0,0.3)"
+                        : "rgba(0,0,0,0.1)",
+                      boxShadow: isDragging
+                        ? "0 0 12px 6px rgba(255,255,255,0.5)"
+                        : "none",
+                    }}
+                  >
+                    {column.items?.map((item, index) => {
+                      return (
+                        <Card
+                          item={item}
+                          index={index}
+                          key={item.id}
+                          columnId={columnId}
+                          boardId={boardId}
+                        />
+                      );
+                    })}
+                  </DroppableColumn>
                 );
-              })}
-            </DroppableColumn>
-          );
-        }}
-      </Droppable>
-    </ColumnContainer>
+              }}
+            </Droppable>
+          </ColumnContainer>
+        );
+      }}
+    </Draggable>
   );
 };
 
@@ -172,6 +198,7 @@ const Menu = styled(motion.ul)`
   text-align: left;
   margin: 0;
   box-shadow: 0 0 15px 6px rgba(0, 0, 0, 0.15);
+  z-index: 2;
 `;
 
 const MenuItem = styled(motion.li)`
@@ -198,8 +225,13 @@ const ColumnHeader = styled.div`
   position: relative;
 `;
 
-const ColumnTitle = styled.span`
+const ColumnTitleWrapper = styled.span`
   flex: 1;
+  display: flex;
+  justify-content: center;
+`;
+
+const ColumnTitle = styled.span`
   font-size: 24px;
   font-weight: bold;
 `;

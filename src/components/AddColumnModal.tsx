@@ -30,6 +30,7 @@ const AddColumnModal: FC<{ boardId: string }> = ({ boardId }) => {
     if (!name.trim()) return;
     const newColumn = createColumn(name);
     dispatch(onAddColumn(boardId, newColumn));
+    setName("");
     closeModalHandler();
   };
 

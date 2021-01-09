@@ -7,6 +7,18 @@ import { openModal } from "../redux/actions";
 
 import { FC } from "react";
 
+import { motion } from "framer-motion";
+
+const variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      duration: 1,
+    },
+  },
+};
+
 const AddColumn: FC<{ boardId: string }> = ({ boardId }) => {
   const dispatch = useDispatch();
 
@@ -15,7 +27,7 @@ const AddColumn: FC<{ boardId: string }> = ({ boardId }) => {
   };
 
   return (
-    <AddColumnContainer>
+    <AddColumnContainer variants={variants} initial="hidden" animate="visible">
       <PlaceHolder />
       <AddColumnInnerContainer onClick={openAddColumnModal}>
         <Title>Add Column</Title>
@@ -27,7 +39,7 @@ const AddColumn: FC<{ boardId: string }> = ({ boardId }) => {
 
 export default AddColumn;
 
-const AddColumnContainer = styled.div`
+const AddColumnContainer = styled(motion.div)`
   min-width: 350px;
   padding: 8px 8px 8px 2px;
   height: 100%;

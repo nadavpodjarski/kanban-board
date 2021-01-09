@@ -1,19 +1,15 @@
-import { combineReducers, createStore, applyMiddleware } from "redux";
+import { combineReducers, createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
-import { dndReducer, IDNDReducer, uiReducer, IUIState } from "./reducer";
-import thunk from "redux-thunk";
+import { appReducer, IAPPState, uiReducer, IUIState } from "./reducer";
 
 export interface IState {
-  dnd: IDNDReducer;
+  app: IAPPState;
   ui: IUIState;
 }
 
 const rootReducer = combineReducers({
-  dnd: dndReducer,
+  app: appReducer,
   ui: uiReducer,
 });
 
-export const store = createStore(
-  rootReducer,
-  composeWithDevTools(applyMiddleware(thunk))
-);
+export const store = createStore(rootReducer, composeWithDevTools());

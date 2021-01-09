@@ -13,10 +13,8 @@ export const createCard = (content: any): CardType => {
 
 export const createColumn = (name: string) => {
   return {
-    [uuid()]: {
-      name,
-      items: [],
-    },
+    name,
+    items: [],
   };
 };
 

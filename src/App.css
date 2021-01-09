@@ -7,9 +7,5 @@
   color: white;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  background: radial-gradient(
-    circle,
-    rgba(148, 102, 185, 1) 0%,
-    rgba(131, 58, 180, 1) 100%
-  );
+  background: radial-gradient(hsl(214, 47%, 23%), hsl(237, 49%, 15%));
 }

@@ -1,8 +1,8 @@
 import styled from "styled-components";
 import { useState, useEffect, useMemo } from "react";
 
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
-import * as DNDActions from "../redux/actions";
+import { DragDropContext, DropResult, Droppable } from "react-beautiful-dnd";
+import * as Actions from "../redux/actions";
 
 import { useSelector, useDispatch } from "react-redux";
 
@@ -13,14 +13,14 @@ import AddColumn from "../components/AddColumn";
 export default function Main() {
   const dipatch = useDispatch();
 
-  const { boards } = useSelector((state) => state.dnd);
+  const { boards } = useSelector((state) => state.app);
 
   const [currentBoard, setCurrentBoard] = useState("");
-  const [columns, setColumns] = useState<any>({});
+  const [columns, setColumns] = useState<Map<string, ColumnType>>();
 
   const boardOptions = useMemo(
     () =>
-      Object.entries(boards).map(([id, { name }]) => ({
+      Array.from(boards.entries()).map(([id, { name }]) => ({
         id,
         name,
       })),
@@ -37,11 +37,11 @@ export default function Main() {
 
   useEffect(() => {
     if (currentBoard) {
-      const columns = boards[currentBoard].columns;
+      const columns = boards.get(currentBoard)?.columns;
       if (columns) setColumns(columns);
     }
     //eslint-disable-next-line
-  }, [currentBoard]);
+  }, [currentBoard, boards.entries()]);
 
   const onSelectBoard = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const { value } = e.target;
@@ -50,52 +50,64 @@ export default function Main() {
 
   const onDragEndHandler = (result: DropResult) => {
     if (!result.destination) return;
-    dipatch(DNDActions.onDragEnd(result, currentBoard));
+    dipatch(Actions.onDragEnd(result, currentBoard));
   };
 
   return (
     <MainContainer>
-      <>
-        <BoardHeader>
-          {currentBoard && (
-            <>
-              <SelectWrapper>
-                <Label htmlFor="boards-select">Boards</Label>
-                <Select
-                  id="boards-select"
-                  defaultValue={currentBoard}
-                  onChange={onSelectBoard}
-                >
-                  {boardOptions.map((board) => {
-                    return (
-                      <Option key={board.id} value={board.id}>
-                        {board.name}
-                      </Option>
-                    );
-                  })}
-                </Select>
-              </SelectWrapper>
-              <BoardName>{boards[currentBoard]?.name}</BoardName>
-            </>
-          )}
-        </BoardHeader>
-        <Columns>
-          <DragDropContext onDragEnd={onDragEndHandler}>
-            {columns &&
-              Object.entries(columns).map(([id, column]) => {
-                return (
-                  <Column
-                    id={id}
-                    column={column as ColumnType}
-                    key={id}
-                    boardId={currentBoard}
-                  />
-                );
-              })}
-          </DragDropContext>
-          <AddColumn boardId={currentBoard} />
-        </Columns>
-      </>
+      <BoardHeader>
+        {currentBoard && (
+          <>
+            <SelectWrapper>
+              <Label htmlFor="boards-select">Boards</Label>
+              <Select
+                id="boards-select"
+                defaultValue={currentBoard}
+                onChange={onSelectBoard}
+              >
+                {boardOptions.map((board) => {
+                  return (
+                    <Option key={board.id} value={board.id}>
+                      {board.name}
+                    </Option>
+                  );
+                })}
+              </Select>
+            </SelectWrapper>
+            <BoardName>{boards.get(currentBoard)?.name}</BoardName>
+          </>
+        )}
+      </BoardHeader>
+      <DragDropContext onDragEnd={onDragEndHandler}>
+        {currentBoard ? (
+          <Droppable
+            droppableId={currentBoard}
+            type="DROPPABLE_BOARD"
+            direction="horizontal"
+          >
+            {(provided) => {
+              return (
+                <Columns {...provided.droppableProps} ref={provided.innerRef}>
+                  {columns &&
+                    Array.from(columns.entries()).map(([id, column], index) => {
+                      return (
+                        <Column
+                          index={index}
+                          id={id}
+                          column={column}
+                          key={id}
+                          boardId={currentBoard}
+                        />
+                      );
+                    })}
+                  {provided.placeholder}
+                  <AddColumn boardId={currentBoard} />
+                </Columns>
+              );
+            }}
+          </Droppable>
+        ) : null}
+      </DragDropContext>
     </MainContainer>
   );
 }
@@ -124,7 +136,9 @@ const Columns = styled.div`
   display: flex;
   overflow-x: auto;
   scrollbar-width: none;
+  flex-wrap: nowrap;
   height: 100%;
+  width: 100%;
 `;
 
 const SelectWrapper = styled.div`
