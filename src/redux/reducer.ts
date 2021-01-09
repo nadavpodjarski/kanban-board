@@ -8,15 +8,21 @@ import * as _ from "lodash";
 const items: CardType[] = [];
 
 type Columns = Map<string, ColumnType>;
-const columns: Columns = new Map()
+
+const salesColumns: Columns = new Map()
+  .set(uuid(), { name: "To do", items })
+  .set(uuid(), { name: "In Progress", items })
+  .set(uuid(), { name: "Done", items });
+
+const rndColumns: Columns = new Map()
   .set(uuid(), { name: "To do", items })
   .set(uuid(), { name: "In Progress", items })
   .set(uuid(), { name: "Done", items });
 
 type Boards = Map<string, { name: string; columns: Columns }>;
 const boards: Boards = new Map()
-  .set(uuid(), { name: "Sales", columns })
-  .set(uuid(), { name: "R&D", columns });
+  .set(uuid(), { name: "Sales", columns: salesColumns })
+  .set(uuid(), { name: "R&D", columns: rndColumns });
 
 export interface IAPPState {
   boards: Boards;
@@ -99,7 +105,6 @@ export const appReducer = (
           items: newCards,
         });
       }
-
       return { ...state };
     }
     case types.DELETE_CARD: {
