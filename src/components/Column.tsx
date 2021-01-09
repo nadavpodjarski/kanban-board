@@ -7,16 +7,18 @@ import AddCard from "./AddCard";
 import ClickOutsideOverlay from "./ClickOutsideOverlay";
 
 import { useDispatch } from "react-redux";
-import { onDeleteColumn } from "../redux/actions";
+import { onDeleteColumn, openModal } from "../redux/actions";
 
 import { Add } from "@styled-icons/ionicons-solid";
 import { ThreeDots } from "@styled-icons/bootstrap";
 
 import { AnimatePresence, motion } from "framer-motion";
 
+import { CardType } from "./Card";
+
 export type ColumnType = {
   name: string;
-  items: any[];
+  items: CardType[];
 };
 
 interface IColumn {
@@ -66,11 +68,12 @@ const Column: FC<IColumn> = ({ id: columnId, column, boardId, index }) => {
   };
 
   const closeMenu = () => {
+    console.log("close0");
     setIsShowMenu(false);
   };
 
   const toggleMenu = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
-    e.stopPropagation();
+    console.log("toggle");
     setIsShowMenu((prevState) => !prevState);
   };
 
@@ -78,7 +81,11 @@ const Column: FC<IColumn> = ({ id: columnId, column, boardId, index }) => {
     dispatch(onDeleteColumn(boardId, columnId));
   };
 
-  const openEditModal = () => {};
+  const openEditModal = () => {
+    dispatch(
+      openModal("edit-column", { boardId, columnId, value: column.name })
+    );
+  };
 
   return (
     <Draggable draggableId={columnId} index={index}>

@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 import EditCardModal from "./EditCardModal";
 import AddColumnModal from "./AddColumnModal";
+import EditColumn from "./EditColumnModal";
 
 const matchModal = (type: string) => {
   switch (type) {
@@ -15,6 +16,8 @@ const matchModal = (type: string) => {
       return EditCardModal;
     case "add-column":
       return AddColumnModal;
+    case "edit-column":
+      return EditColumn;
     default:
       return null;
   }

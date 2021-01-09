@@ -4,19 +4,16 @@ import { useState, FC } from "react";
 
 import { useDispatch } from "react-redux";
 
-import { onAddColumn } from "../redux/actions";
+import { onEditColumn } from "../redux/actions";
 
 import { CloseOutline } from "@styled-icons/evaicons-outline/";
-
-import { closeModal } from "../redux/actions";
-
-import { createColumn } from "../utils";
 
 const EditColumnModal: FC<{
   boardId: string;
   columnId: string;
   value: string;
-}> = ({ boardId, columnId, value }) => {
+  closeModal: () => void;
+}> = ({ boardId, columnId, value, closeModal }) => {
   const [name, setName] = useState(value);
 
   const dispatch = useDispatch();
@@ -26,32 +23,28 @@ const EditColumnModal: FC<{
     setName(value);
   };
 
-  const closeModalHandler = () => {
-    dispatch(closeModal());
-  };
-
   const onConfirmHandler = () => {
     if (!name.trim()) return;
-    const newColumn = createColumn(name);
-    dispatch(onAddColumn(boardId, newColumn));
-    closeModalHandler();
+    dispatch(onEditColumn(boardId, columnId, name));
+    setName("");
+    closeModal();
   };
 
   return (
     <EditColumnModalContainer onClick={(e) => e.stopPropagation()}>
       <Header>
-        <Title>Add Column</Title>
-        <CloseButton onClick={closeModalHandler} />
+        <Title>Rename Column</Title>
+        <CloseButton onClick={closeModal} />
       </Header>
       <EditColumnBody>
         <Input
-          placeholder="Name Your New Column"
+          placeholder="Rename Column"
           value={name}
           onChange={onChangeHandler}
         />
         <ActionsWrapper>
           <ConfirmButton onClick={onConfirmHandler}>Add</ConfirmButton>
-          <CancelButton onClick={closeModalHandler}>Cancel</CancelButton>
+          <CancelButton onClick={closeModal}>Cancel</CancelButton>
         </ActionsWrapper>
       </EditColumnBody>
     </EditColumnModalContainer>

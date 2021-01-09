@@ -3,7 +3,6 @@ import { ColumnType } from "../components/Column";
 import { CardType } from "../components/Card";
 
 import * as types from "./types";
-import * as _ from "lodash";
 
 const items: CardType[] = [];
 
@@ -45,15 +44,15 @@ export const appReducer = (
 
       if (type === "DROPPABLE_COLUMN") {
         if (source.droppableId !== destination.droppableId) {
-          const sourceColumn = _.cloneDeep(
-            columns.get(source.droppableId)
+          const sourceColumn = columns.get(
+            source.droppableId
           ) as NonNullable<ColumnType>;
 
-          const destColumn = _.cloneDeep(
-            columns.get(destination.droppableId)
+          const destColumn = columns.get(
+            destination.droppableId
           ) as NonNullable<ColumnType>;
 
-          const sourceItems = _.clone(sourceColumn.items);
+          const sourceItems = [...sourceColumn.items];
           const destItems = [...destColumn.items];
           const [removed] = sourceItems?.splice(source.index, 1);
 
@@ -71,7 +70,7 @@ export const appReducer = (
           const column = columns.get(
             source.droppableId
           ) as NonNullable<ColumnType>;
-          const copiedItems = _.cloneDeep(column.items);
+          const copiedItems = [...column.items];
           const [moved] = copiedItems.splice(source.index, 1);
           copiedItems.splice(destination.index, 0, moved);
           columns.set(source.droppableId, {
@@ -144,6 +143,11 @@ export const appReducer = (
       const board = state.boards.get(boardId);
       const columns = board?.columns;
       columns?.delete(columnId);
+      return { ...state };
+    }
+    case types.EDIT_COLUMN: {
+      const { boardId, columnId, name } = action.payload;
+      state.boards.get(boardId)!.columns.get(columnId)!.name = name;
       return { ...state };
     }
     default:
