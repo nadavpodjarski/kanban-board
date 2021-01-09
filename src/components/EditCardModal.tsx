@@ -20,10 +20,6 @@ const EditCard: FC<{
   const [value, setValue] = useState(item.content);
   const dispatch = useDispatch();
 
-  const closeModalHandler = () => {
-    closeModal();
-  };
-
   const onChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const { value } = e.target;
     setValue(value);
@@ -34,7 +30,7 @@ const EditCard: FC<{
     item.content = value;
     item.updatedAt = Date.now();
     dispatch(onEditCard(boardId, columnId, item));
-    closeModalHandler();
+    closeModal();
   };
 
   return (
@@ -51,15 +47,13 @@ const EditCard: FC<{
     >
       <Header>
         <Title>Edit Card</Title>
-        <CloseButton onClick={closeModalHandler} />
+        <CloseButton onClick={closeModal} />
       </Header>
       <EditCardBody>
         <TextArea value={value} onChange={onChangeHandler} />
         <ActionsWrapper>
           <ConfirmEditButton onClick={onConfirmHandler}>Edit</ConfirmEditButton>
-          <CancelEditButton onClick={closeModalHandler}>
-            Cancel
-          </CancelEditButton>
+          <CancelEditButton onClick={closeModal}>Cancel</CancelEditButton>
         </ActionsWrapper>
       </EditCardBody>
     </EditCardContainer>

@@ -23,23 +23,19 @@ const AddColumnModal: FC<{ boardId: string; closeModal: () => void }> = ({
     setName(value);
   };
 
-  const closeModalHandler = () => {
-    closeModal();
-  };
-
   const onConfirmHandler = () => {
     if (!name.trim()) return;
     const newColumn = createColumn(name);
     dispatch(onAddColumn(boardId, newColumn));
     setName("");
-    closeModalHandler();
+    closeModal();
   };
 
   return (
     <AddColumnModalContainer onClick={(e) => e.stopPropagation()}>
       <Header>
         <Title>Add Column</Title>
-        <CloseButton onClick={closeModalHandler} />
+        <CloseButton onClick={closeModal} />
       </Header>
       <AddColumnBody>
         <Input
@@ -49,7 +45,7 @@ const AddColumnModal: FC<{ boardId: string; closeModal: () => void }> = ({
         />
         <ActionsWrapper>
           <ConfirmButton onClick={onConfirmHandler}>Add</ConfirmButton>
-          <CancelButton onClick={closeModalHandler}>Cancel</CancelButton>
+          <CancelButton onClick={closeModal}>Cancel</CancelButton>
         </ActionsWrapper>
       </AddColumnBody>
     </AddColumnModalContainer>
