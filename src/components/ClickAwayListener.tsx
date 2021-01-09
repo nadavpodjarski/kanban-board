@@ -1,17 +1,20 @@
 import { FC, useEffect } from "react";
 
 /**
- * on mount adds mouse down event listener to document body with onClick callback function
- * on unmount remove event listener
+ * on mount adds click event listener to document body with onClick callback function
+ * and  on unmount remove event listener
  */
 
-const ClickOutsideOverlay: FC<{
-  onClickAway: () => void;
+const ClickAwayListener: FC<{
+  onClickAway: (e: MouseEvent) => void;
 }> = ({ onClickAway }) => {
+  const onClickHandler = (e: MouseEvent) => {
+    onClickAway(e);
+  };
   useEffect(() => {
-    document.body.addEventListener("mousedown", onClickAway);
+    document.body.addEventListener("click", onClickHandler);
     return () => {
-      document.body.removeEventListener("mousedown", onClickAway);
+      document.body.removeEventListener("click", onClickHandler);
     };
     //eslint-disable-next-line
   }, []);
@@ -19,4 +22,4 @@ const ClickOutsideOverlay: FC<{
   return <></>;
 };
 
-export default ClickOutsideOverlay;
+export default ClickAwayListener;

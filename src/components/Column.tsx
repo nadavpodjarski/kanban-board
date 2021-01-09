@@ -1,5 +1,5 @@
 import { Droppable, Draggable } from "react-beautiful-dnd";
-import { FC, useState } from "react";
+import { FC, useState, useRef } from "react";
 
 import styled from "styled-components";
 import Card from "./Card";
@@ -61,14 +61,18 @@ const Column: FC<IColumn> = ({ id: columnId, column, boardId, index }) => {
   const [isShowMenu, setIsShowMenu] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
+  const menuButtonRef = useRef(null);
+
   const dispatch = useDispatch();
 
   const toggleAddCard = () => {
     setIsAddCard((prevState) => !prevState);
   };
 
-  const closeMenu = () => {
-    setIsShowMenu(false);
+  const closeMenu = (e: MouseEvent) => {
+    if (!(menuButtonRef.current! as any).contains(e.target)) {
+      setIsShowMenu(false);
+    }
   };
 
   const toggleMenu = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
@@ -105,7 +109,7 @@ const Column: FC<IColumn> = ({ id: columnId, column, boardId, index }) => {
               </ColumnTitleWrapper>
               <AddIcon onClick={toggleAddCard} />
               <MenuIconWrapper>
-                <MenuIcon onClick={toggleMenu} />
+                <MenuIcon onClick={toggleMenu} ref={menuButtonRef} />
               </MenuIconWrapper>
               <AnimatePresence exitBeforeEnter>
                 {isShowMenu && (
@@ -251,7 +255,7 @@ const DroppableColumn = styled.div`
   scrollbar-width: none;
 `;
 const AddIcon = styled(Add)`
-  color: rgba(0, 0, 0, 0.8);
+  color: rgba(255, 255, 255, 0.5);
   width: 20px;
   cursor: pointer;
   &:hover {
@@ -261,7 +265,7 @@ const AddIcon = styled(Add)`
 
 const MenuIcon = styled(ThreeDots)`
   width: 18px;
-  color: rgba(0, 0, 0, 0.8);
+  color: rgba(255, 255, 255, 0.5);
   margin-left: 8px;
   cursor: pointer;
 `;
