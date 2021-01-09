@@ -68,12 +68,10 @@ const Column: FC<IColumn> = ({ id: columnId, column, boardId, index }) => {
   };
 
   const closeMenu = () => {
-    console.log("close0");
     setIsShowMenu(false);
   };
 
   const toggleMenu = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
-    console.log("toggle");
     setIsShowMenu((prevState) => !prevState);
   };
 
