@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import EditCardModal from "./EditCardModal";
 import AddColumnModal from "./AddColumnModal";
 
-const matchModalContent = (type: string) => {
+const matchModal = (type: string) => {
   switch (type) {
     case "edit-card":
       return EditCardModal;
@@ -25,7 +25,7 @@ const DynamicModal: FC = () => {
 
   const dispacth = useDispatch();
 
-  const ModalContent = matchModalContent(modal?.type);
+  const Modal = matchModal(modal?.type);
 
   const closeModalHandler = () => {
     dispacth(closeModal());
@@ -33,14 +33,14 @@ const DynamicModal: FC = () => {
 
   return (
     <AnimatePresence exitBeforeEnter>
-      {isModalOpen && ModalContent ? (
+      {isModalOpen && Modal ? (
         <Overlay
           onClick={closeModalHandler}
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           exit={{ opacity: 0 }}
         >
-          <ModalContent {...modal?.props} />{" "}
+          <Modal {...modal?.props} closeModal={closeModalHandler} />
         </Overlay>
       ) : null}
     </AnimatePresence>

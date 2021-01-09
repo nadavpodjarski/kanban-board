@@ -8,11 +8,12 @@ import { onAddColumn } from "../redux/actions";
 
 import { CloseOutline } from "@styled-icons/evaicons-outline/";
 
-import { closeModal } from "../redux/actions";
-
 import { createColumn } from "../utils";
 
-const AddColumnModal: FC<{ boardId: string }> = ({ boardId }) => {
+const AddColumnModal: FC<{ boardId: string; closeModal: () => void }> = ({
+  boardId,
+  closeModal,
+}) => {
   const [name, setName] = useState("");
 
   const dispatch = useDispatch();
@@ -23,7 +24,7 @@ const AddColumnModal: FC<{ boardId: string }> = ({ boardId }) => {
   };
 
   const closeModalHandler = () => {
-    dispatch(closeModal());
+    closeModal();
   };
 
   const onConfirmHandler = () => {

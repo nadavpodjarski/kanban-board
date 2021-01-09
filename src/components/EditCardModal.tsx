@@ -11,18 +11,17 @@ import { CardType } from "./Card";
 import { useDispatch } from "react-redux";
 import { onEditCard } from "../redux/actions";
 
-import { closeModal } from "../redux/actions";
-
 const EditCard: FC<{
   boardId: string;
   columnId: string;
   item: CardType;
-}> = ({ boardId, columnId, item }) => {
+  closeModal: () => void;
+}> = ({ boardId, columnId, item, closeModal }) => {
   const [value, setValue] = useState(item.content);
   const dispatch = useDispatch();
 
   const closeModalHandler = () => {
-    dispatch(closeModal());
+    closeModal();
   };
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
