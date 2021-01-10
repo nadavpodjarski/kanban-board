@@ -43,7 +43,7 @@ const EditColumnModal: FC<{
           onChange={onChangeHandler}
         />
         <ActionsWrapper>
-          <ConfirmButton onClick={onConfirmHandler}>Add</ConfirmButton>
+          <ConfirmButton onClick={onConfirmHandler}>Edit</ConfirmButton>
           <CancelButton onClick={closeModal}>Cancel</CancelButton>
         </ActionsWrapper>
       </EditColumnBody>
