@@ -89,6 +89,8 @@ const Column: FC<IColumn> = ({ id: columnId, column, boardId, index }) => {
     );
   };
 
+  console.log(index);
+
   return (
     <Draggable draggableId={columnId} index={index}>
       {(provided, snapshot) => {
@@ -103,7 +105,10 @@ const Column: FC<IColumn> = ({ id: columnId, column, boardId, index }) => {
           >
             <ColumnHeader>
               <ColumnTitleWrapper>
-                <ColumnTitle {...provided.dragHandleProps}>
+                <ColumnTitle
+                  data-cy={`column-title`}
+                  {...provided.dragHandleProps}
+                >
                   {column.name}
                 </ColumnTitle>
               </ColumnTitleWrapper>

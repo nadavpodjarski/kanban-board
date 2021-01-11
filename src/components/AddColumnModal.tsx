@@ -23,7 +23,8 @@ const AddColumnModal: FC<{ boardId: string; closeModal: () => void }> = ({
     setName(value);
   };
 
-  const onConfirmHandler = () => {
+  const onSubmitHandler = (e: React.FormEvent) => {
+    e.preventDefault();
     if (!name.trim()) return;
     const newColumn = createColumn(name);
     dispatch(onAddColumn(boardId, newColumn));
@@ -37,17 +38,18 @@ const AddColumnModal: FC<{ boardId: string; closeModal: () => void }> = ({
         <Title>Add Column</Title>
         <CloseButton onClick={closeModal} />
       </Header>
-      <AddColumnBody>
+      <AddColumnForm onSubmit={onSubmitHandler} data-cy="add-column-form">
         <Input
+          data-cy="add-column-input"
           placeholder="Name Your New Column"
           value={name}
           onChange={onChangeHandler}
         />
         <ActionsWrapper>
-          <ConfirmButton onClick={onConfirmHandler}>Add</ConfirmButton>
+          <ConfirmButton type="submit">Add</ConfirmButton>
           <CancelButton onClick={closeModal}>Cancel</CancelButton>
         </ActionsWrapper>
-      </AddColumnBody>
+      </AddColumnForm>
     </AddColumnModalContainer>
   );
 };
@@ -79,7 +81,7 @@ const Input = styled.input`
   margin-top: 24px;
 `;
 
-const AddColumnBody = styled.div`
+const AddColumnForm = styled.form`
   padding: 0 16px;
   flex: 1;
 `;

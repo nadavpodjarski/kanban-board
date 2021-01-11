@@ -8,10 +8,9 @@ const items: CardType[] = [];
 
 type Columns = Map<string, ColumnType>;
 
-const salesColumns: Columns = new Map()
-  .set(uuid(), { name: "To do", items })
-  .set(uuid(), { name: "In Progress", items })
-  .set(uuid(), { name: "Done", items });
+const salesColumns: Columns = new Map().set(uuid(), { name: "To do", items });
+// .set(uuid(), { name: "In Progress", items })
+// .set(uuid(), { name: "Done", items });
 
 const rndColumns: Columns = new Map()
   .set(uuid(), { name: "To do", items })
@@ -19,9 +18,11 @@ const rndColumns: Columns = new Map()
   .set(uuid(), { name: "Done", items });
 
 type Boards = Map<string, { name: string; columns: Columns }>;
-const boards: Boards = new Map()
-  .set(uuid(), { name: "Sales", columns: salesColumns })
-  .set(uuid(), { name: "R&D", columns: rndColumns });
+const boards: Boards = new Map().set(uuid(), {
+  name: "Sales",
+  columns: salesColumns,
+});
+// .set(uuid(), { name: "R&D", columns: rndColumns });
 
 export interface IAPPState {
   boards: Boards;

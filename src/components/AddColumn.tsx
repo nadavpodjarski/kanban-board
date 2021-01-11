@@ -29,8 +29,11 @@ const AddColumn: FC<{ boardId: string }> = ({ boardId }) => {
   return (
     <AddColumnContainer variants={variants} initial="hidden" animate="visible">
       <PlaceHolder />
-      <AddColumnInnerContainer onClick={openAddColumnModal}>
-        <Title>Add Column</Title>
+      <AddColumnInnerContainer
+        data-cy="add-column-container"
+        onClick={openAddColumnModal}
+      >
+        <Title data-cy="add-column-text">Add Column</Title>
         <AddIcon />
       </AddColumnInnerContainer>
     </AddColumnContainer>
