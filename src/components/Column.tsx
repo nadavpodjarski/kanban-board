@@ -89,8 +89,6 @@ const Column: FC<IColumn> = ({ id: columnId, column, boardId, index }) => {
     );
   };
 
-  console.log(index);
-
   return (
     <Draggable draggableId={columnId} index={index}>
       {(provided, snapshot) => {

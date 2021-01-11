@@ -1,11 +1,11 @@
-import { FC, useState } from "react";
+import { FC, useState, useRef } from "react";
 import styled from "styled-components";
 
 import { useDispatch } from "react-redux";
 import { motion } from "framer-motion";
 
 import * as utils from "../utils";
-import * as DNDActions from "../redux/actions";
+import * as Actions from "../redux/actions";
 
 const AddCard: FC<{
   closeAddCard: () => void;
@@ -14,6 +14,8 @@ const AddCard: FC<{
 }> = ({ closeAddCard, boardId, columnId }) => {
   const [value, setValue] = useState("");
 
+  const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
   const dispatch = useDispatch();
 
   const onChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -21,11 +23,15 @@ const AddCard: FC<{
     setValue(value);
   };
 
-  const onAddHandler = () => {
+  const onSubmitHandler = (e: React.FormEvent) => {
+    e.preventDefault();
     if (!value.trim()) return;
-    const newCard = utils.createCard(value);
-    dispatch(DNDActions.onAddCard(boardId, columnId, newCard));
+
+    const newCard = utils.createCard(value.trim());
+    dispatch(Actions.onAddCard(boardId, columnId, newCard));
+
     setValue("");
+    textAreaRef.current!.focus();
   };
 
   const onCancelHandler = () => {
@@ -34,6 +40,7 @@ const AddCard: FC<{
 
   return (
     <AddCardContainer
+      onSubmit={onSubmitHandler}
       initial={{ scale: 0 }}
       animate={{ scale: 1 }}
       exit={{ scale: 0 }}
@@ -43,9 +50,9 @@ const AddCard: FC<{
         damping: 20,
       }}
     >
-      <TextArea value={value} onChange={onChangeHandler} />
+      <TextArea value={value} onChange={onChangeHandler} ref={textAreaRef} />
       <ActionsWrapper>
-        <AddButton onClick={onAddHandler}>Add</AddButton>
+        <AddButton type="submit">Add</AddButton>
         <CancelButton onClick={onCancelHandler}>Cancel</CancelButton>
       </ActionsWrapper>
     </AddCardContainer>
@@ -54,7 +61,7 @@ const AddCard: FC<{
 
 export default AddCard;
 
-const AddCardContainer = styled(motion.div)`
+const AddCardContainer = styled(motion.form)`
   height: 140px;
   width: 100%;
   padding: 0 8px;
