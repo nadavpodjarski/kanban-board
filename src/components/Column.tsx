@@ -102,6 +102,7 @@ const Column: FC<IColumn> = ({ id: columnId, column, boardId, index }) => {
             style={{
               ...provided.draggableProps.style,
             }}
+            data-cy={`draggable-column`}
           >
             <ColumnHeader>
               <ColumnTitleWrapper>

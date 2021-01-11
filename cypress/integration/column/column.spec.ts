@@ -23,4 +23,13 @@ describe("Column", () => {
       expect(titles[titles.length - 1]).to.have.text("cy-column-test");
     });
   });
+
+  // it("Drag and drop column", () => {
+  //   cy.get("[data-cy=column-title]")
+  //     .first()
+  //     .trigger("mousedown")
+  //     .wait(1500)
+  //     .trigger("mousemove", 400, 0, { force: true })
+  //     .trigger("mouseup", { force: true });
+  // });
 });
