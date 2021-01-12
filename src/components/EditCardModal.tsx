@@ -25,9 +25,10 @@ const EditCard: FC<{
     setValue(value);
   };
 
-  const onConfirmHandler = () => {
+  const onSubmitHandler = (e: React.FormEvent) => {
+    e.preventDefault();
     if (!value.trim()) return;
-    item.content = value;
+    item.content = value.trim();
     item.updatedAt = Date.now();
     dispatch(onEditCard(boardId, columnId, item));
     closeModal();
@@ -49,13 +50,13 @@ const EditCard: FC<{
         <Title>Edit Card</Title>
         <CloseButton onClick={closeModal} />
       </Header>
-      <EditCardBody>
+      <EditCardForm onSubmit={onSubmitHandler}>
         <TextArea value={value} onChange={onChangeHandler} />
         <ActionsWrapper>
-          <ConfirmEditButton onClick={onConfirmHandler}>Edit</ConfirmEditButton>
+          <ConfirmEditButton type="submit">Edit</ConfirmEditButton>
           <CancelEditButton onClick={closeModal}>Cancel</CancelEditButton>
         </ActionsWrapper>
-      </EditCardBody>
+      </EditCardForm>
     </EditCardContainer>
   );
 };
@@ -96,7 +97,7 @@ const Header = styled.div`
   box-sizing: border-box;
 `;
 
-const EditCardBody = styled.div`
+const EditCardForm = styled.form`
   padding: 16px;
   flex: 1;
 `;

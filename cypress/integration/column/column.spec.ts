@@ -19,17 +19,13 @@ describe("Column", () => {
   });
 
   it("Verify column title", () => {
-    cy.get("[data-cy=column-title]").then((titles) => {
-      expect(titles[titles.length - 1]).to.have.text("cy-column-test");
-    });
+    cy.get("[data-cy=column-title]")
+      .last()
+      .should("have.text", "cy-column-test");
   });
 
-  // it("Drag and drop column", () => {
-  //   cy.get("[data-cy=column-title]")
-  //     .first()
-  //     .trigger("mousedown")
-  //     .wait(1500)
-  //     .trigger("mousemove", 400, 0, { force: true })
-  //     .trigger("mouseup", { force: true });
-  // });
+  it("Drag and drop column", () => {
+    //@ts-ignore
+    cy.get("[data-cy=column-title]").first().move({ x: 400, y: 0 });
+  });
 });

@@ -23,7 +23,8 @@ const EditColumnModal: FC<{
     setName(value);
   };
 
-  const onConfirmHandler = () => {
+  const onSubmitHandler = (e: React.FormEvent) => {
+    e.preventDefault();
     if (!name.trim()) return;
     dispatch(onEditColumn(boardId, columnId, name));
     setName("");
@@ -36,17 +37,17 @@ const EditColumnModal: FC<{
         <Title>Rename Column</Title>
         <CloseButton onClick={closeModal} />
       </Header>
-      <EditColumnBody>
+      <EditColumnForm onSubmit={onSubmitHandler}>
         <Input
           placeholder="Rename Column"
           value={name}
           onChange={onChangeHandler}
         />
         <ActionsWrapper>
-          <ConfirmButton onClick={onConfirmHandler}>Edit</ConfirmButton>
+          <ConfirmButton type="submit">Edit</ConfirmButton>
           <CancelButton onClick={closeModal}>Cancel</CancelButton>
         </ActionsWrapper>
-      </EditColumnBody>
+      </EditColumnForm>
     </EditColumnModalContainer>
   );
 };
@@ -78,7 +79,7 @@ const Input = styled.input`
   margin-top: 24px;
 `;
 
-const EditColumnBody = styled.div`
+const EditColumnForm = styled.form`
   padding: 0 16px;
   flex: 1;
 `;
