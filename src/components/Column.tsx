@@ -5,7 +5,7 @@ import styled from "styled-components";
 import Card from "./Card";
 import AddCard from "./AddCard";
 
-import { useClickAwayListener } from "../hooks/useClickAwayListener";
+import ClickAwayListener from "react-click-away-listener";
 
 import { useDispatch } from "react-redux";
 import { onDeleteColumn, openModal } from "../redux/actions";
@@ -61,8 +61,6 @@ const Column: FC<IColumn> = ({ id: columnId, column, boardId, index }) => {
   const [isAddCard, setIsAddCard] = useState(false);
   const [isShowMenu, setIsShowMenu] = useState(false);
 
-  const [refListener, ClickAwayListener] = useClickAwayListener();
-
   const dispatch = useDispatch();
 
   const toggleAddCard = () => setIsAddCard((prevState) => !prevState);
@@ -72,12 +70,17 @@ const Column: FC<IColumn> = ({ id: columnId, column, boardId, index }) => {
   const toggleMenu = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) =>
     setIsShowMenu((prevState) => !prevState);
 
-  const onDeleteHandler = () => dispatch(onDeleteColumn(boardId, columnId));
+  const onDeleteHandler = () => {
+    setIsShowMenu(false);
+    dispatch(onDeleteColumn(boardId, columnId));
+  };
 
-  const openEditModal = () =>
+  const openEditModal = () => {
     dispatch(
       openModal("edit-column", { boardId, columnId, value: column.name })
     );
+    setIsShowMenu(false);
+  };
 
   return (
     <Draggable draggableId={columnId} index={index}>
@@ -102,25 +105,26 @@ const Column: FC<IColumn> = ({ id: columnId, column, boardId, index }) => {
               </ColumnTitleWrapper>
               <AddIcon onClick={toggleAddCard} />
               <MenuIconWrapper>
-                <MenuIcon onClick={toggleMenu} ref={refListener} />
+                <MenuIcon onClick={toggleMenu} />
               </MenuIconWrapper>
               <AnimatePresence exitBeforeEnter>
                 {isShowMenu && (
                   <>
-                    <ClickAwayListener onClickAway={closeMenu} />
-                    <Menu
-                      variants={menu}
-                      initial="closed"
-                      animate="open"
-                      exit="closed"
-                    >
-                      <MenuItem variants={menuItem} onClick={openEditModal}>
-                        Edit
-                      </MenuItem>
-                      <MenuItem variants={menuItem} onClick={onDeleteHandler}>
-                        Delete
-                      </MenuItem>
-                    </Menu>
+                    <ClickAwayListener onClickAway={closeMenu}>
+                      <Menu
+                        variants={menu}
+                        initial="closed"
+                        animate="open"
+                        exit="closed"
+                      >
+                        <MenuItem variants={menuItem} onClick={openEditModal}>
+                          Edit
+                        </MenuItem>
+                        <MenuItem variants={menuItem} onClick={onDeleteHandler}>
+                          Delete
+                        </MenuItem>
+                      </Menu>
+                    </ClickAwayListener>
                   </>
                 )}
               </AnimatePresence>
