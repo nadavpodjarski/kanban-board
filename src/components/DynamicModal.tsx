@@ -30,9 +30,7 @@ const DynamicModal: FC = () => {
 
   const Modal = matchModal(modal?.type);
 
-  const closeModalHandler = () => {
-    dispacth(closeModal());
-  };
+  const closeModalHandler = () => dispacth(closeModal());
 
   return (
     <AnimatePresence exitBeforeEnter>

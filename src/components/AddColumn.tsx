@@ -22,9 +22,8 @@ const variants = {
 const AddColumn: FC<{ boardId: string }> = ({ boardId }) => {
   const dispatch = useDispatch();
 
-  const openAddColumnModal = () => {
+  const openAddColumnModal = () =>
     dispatch(openModal("add-column", { boardId }));
-  };
 
   return (
     <AddColumnContainer variants={variants} initial="hidden" animate="visible">

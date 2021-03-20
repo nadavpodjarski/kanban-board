@@ -6,102 +6,90 @@ import * as Actions from "../redux/actions";
 
 import { useSelector, useDispatch } from "react-redux";
 
-import { ColumnType } from "./Column";
 import Column from "../components/Column";
 import AddColumn from "../components/AddColumn";
 
 export default function Main() {
   const dipatch = useDispatch();
 
-  const { boards } = useSelector((state) => state.app);
+  const {
+    boards: [...boards],
+  } = useSelector((state) => state.app);
 
-  const [currentBoard, setCurrentBoard] = useState("");
-  const [columns, setColumns] = useState<Map<string, ColumnType>>();
+  const [currentBoardID, setCurrentBoardID] = useState<any>();
 
-  const boardOptions = useMemo(
+  const parsedBoards = useMemo(
     () =>
-      Array.from(boards.entries()).map(([id, { name }]) => ({
-        id,
-        name,
-      })),
+      boards.reduce((acc: { [key: string]: any }, [id, { name, columns }]) => {
+        acc[id] = {
+          name,
+          columns,
+        };
+        return acc;
+      }, {}),
     [boards]
   );
 
+  const onSelectBoard = (e: React.ChangeEvent<HTMLSelectElement>) =>
+    setCurrentBoardID(e.target.value);
+
+  const onDragEndHandler = (result: DropResult) =>
+    result.destination && dipatch(Actions.onDragEnd(result, currentBoardID));
+
   useEffect(() => {
-    if (boardOptions.length) {
-      const defaultBoard = boardOptions[0].id;
-      setCurrentBoard(defaultBoard);
-    }
-    //eslint-disable-next-line
+    const defaultBoardID = boards[0][0];
+    setCurrentBoardID(defaultBoardID);
+    // eslint-disable-next-line
   }, []);
-
-  useEffect(() => {
-    if (currentBoard) {
-      const columns = boards.get(currentBoard)?.columns;
-      if (columns) setColumns(columns);
-    }
-    //eslint-disable-next-line
-  }, [currentBoard, boards.entries()]);
-
-  const onSelectBoard = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const { value } = e.target;
-    setCurrentBoard(value);
-  };
-
-  const onDragEndHandler = (result: DropResult) => {
-    if (!result.destination) return;
-    dipatch(Actions.onDragEnd(result, currentBoard));
-  };
 
   return (
     <MainContainer>
       <BoardHeader>
-        {currentBoard && (
-          <>
-            <SelectWrapper>
-              <Label htmlFor="boards-select">Boards</Label>
-              <Select
-                id="boards-select"
-                defaultValue={currentBoard}
-                onChange={onSelectBoard}
-              >
-                {boardOptions.map((board) => {
-                  return (
-                    <Option key={board.id} value={board.id}>
-                      {board.name}
-                    </Option>
-                  );
-                })}
-              </Select>
-            </SelectWrapper>
-            <BoardName>{boards.get(currentBoard)?.name}</BoardName>
-          </>
-        )}
+        <>
+          <SelectWrapper>
+            <Label htmlFor="boards-select">Boards</Label>
+            <Select
+              id="boards-select"
+              defaultValue={currentBoardID}
+              onChange={onSelectBoard}
+            >
+              {Object.entries(parsedBoards).map(([id, { name }]) => {
+                return (
+                  <Option key={id + name} value={id}>
+                    {name}
+                  </Option>
+                );
+              })}
+            </Select>
+          </SelectWrapper>
+          <BoardName>{parsedBoards[currentBoardID]?.name}</BoardName>
+        </>
       </BoardHeader>
       <DragDropContext onDragEnd={onDragEndHandler}>
-        {currentBoard ? (
+        {currentBoardID ? (
           <Droppable
-            droppableId={currentBoard}
+            droppableId={currentBoardID}
             type="DROPPABLE_BOARD"
             direction="horizontal"
           >
             {(provided) => {
               return (
                 <Columns {...provided.droppableProps} ref={provided.innerRef}>
-                  {columns &&
-                    Array.from(columns.entries()).map(([id, column], index) => {
+                  {[...parsedBoards[currentBoardID].columns].map(
+                    ([id, column], index) => {
                       return (
                         <Column
                           index={index}
                           id={id}
                           column={column}
                           key={id}
-                          boardId={currentBoard}
+                          boardId={currentBoardID}
                         />
                       );
-                    })}
+                    }
+                  )}
                   {provided.placeholder}
-                  <AddColumn boardId={currentBoard} />
+                  <AddColumn boardId={currentBoardID} />
                 </Columns>
               );
             }}

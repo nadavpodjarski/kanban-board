@@ -34,6 +34,7 @@ const initialState: IAPPState = {
   boards,
 };
 
+// TODO change to redux tool kit
 export const appReducer = (
   state = initialState,
   action: { type: string; payload: any }

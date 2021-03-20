@@ -1,10 +1,11 @@
 import { Droppable, Draggable } from "react-beautiful-dnd";
-import { FC, useState, useRef } from "react";
+import { FC, useState } from "react";
 
 import styled from "styled-components";
 import Card from "./Card";
 import AddCard from "./AddCard";
-import ClickAwayListener from "./ClickAwayListener";
+
+import { useClickAwayListener } from "../hooks/useClickAwayListener";
 
 import { useDispatch } from "react-redux";
 import { onDeleteColumn, openModal } from "../redux/actions";
@@ -59,40 +60,28 @@ const menuItem = {
 const Column: FC<IColumn> = ({ id: columnId, column, boardId, index }) => {
   const [isAddCard, setIsAddCard] = useState(false);
   const [isShowMenu, setIsShowMenu] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
 
-  const menuButtonRef = useRef(null);
+  const [refListener, ClickAwayListener] = useClickAwayListener();
 
   const dispatch = useDispatch();
 
-  const toggleAddCard = () => {
-    setIsAddCard((prevState) => !prevState);
-  };
+  const toggleAddCard = () => setIsAddCard((prevState) => !prevState);
 
-  const closeMenu = (e: MouseEvent) => {
-    if (!(menuButtonRef.current! as any).contains(e.target)) {
-      setIsShowMenu(false);
-    }
-  };
+  const closeMenu = () => setIsShowMenu(false);
 
-  const toggleMenu = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+  const toggleMenu = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) =>
     setIsShowMenu((prevState) => !prevState);
-  };
 
-  const onDeleteHandler = () => {
-    dispatch(onDeleteColumn(boardId, columnId));
-  };
+  const onDeleteHandler = () => dispatch(onDeleteColumn(boardId, columnId));
 
-  const openEditModal = () => {
+  const openEditModal = () =>
     dispatch(
       openModal("edit-column", { boardId, columnId, value: column.name })
     );
-  };
 
   return (
     <Draggable draggableId={columnId} index={index}>
-      {(provided, snapshot) => {
-        setIsDragging(snapshot.isDragging);
+      {(provided, { isDragging: isDraggingColumn }) => {
         return (
           <ColumnContainer
             {...provided.draggableProps}
@@ -113,7 +102,7 @@ const Column: FC<IColumn> = ({ id: columnId, column, boardId, index }) => {
               </ColumnTitleWrapper>
               <AddIcon onClick={toggleAddCard} />
               <MenuIconWrapper>
-                <MenuIcon onClick={toggleMenu} ref={menuButtonRef} />
+                <MenuIcon onClick={toggleMenu} ref={refListener} />
               </MenuIconWrapper>
               <AnimatePresence exitBeforeEnter>
                 {isShowMenu && (
@@ -155,7 +144,7 @@ const Column: FC<IColumn> = ({ id: columnId, column, boardId, index }) => {
                       background: snapshot.isDraggingOver
                         ? "rgba(0,0,0,0.3)"
                         : "rgba(0,0,0,0.1)",
-                      boxShadow: isDragging
+                      boxShadow: isDraggingColumn
                         ? "0 0 12px 6px rgba(255,255,255,0.5)"
                         : "none",
                     }}

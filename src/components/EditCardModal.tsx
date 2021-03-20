@@ -20,10 +20,8 @@ const EditCard: FC<{
   const [value, setValue] = useState(item.content);
   const dispatch = useDispatch();
 
-  const onChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const { value } = e.target;
-    setValue(value);
-  };
+  const onChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) =>
+    setValue(e.target.value);
 
   const onSubmitHandler = (e: React.FormEvent) => {
     e.preventDefault();

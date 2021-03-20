@@ -18,10 +18,8 @@ const EditColumnModal: FC<{
 
   const dispatch = useDispatch();
 
-  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setName(value);
-  };
+  const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) =>
+    setName(e.target.value);
 
   const onSubmitHandler = (e: React.FormEvent) => {
     e.preventDefault();

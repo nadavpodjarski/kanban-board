@@ -34,9 +34,7 @@ const AddCard: FC<{
     textAreaRef.current!.focus();
   };
 
-  const onCancelHandler = () => {
-    closeAddCard();
-  };
+  const onCancelHandler = () => closeAddCard();
 
   return (
     <AddCardContainer

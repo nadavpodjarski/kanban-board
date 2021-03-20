@@ -31,9 +31,8 @@ interface ICard {
 const Card: FC<ICard> = ({ item, index, boardId, columnId }) => {
   const dispatch = useDispatch();
 
-  const onDeleteHandler = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+  const onDeleteHandler = (e: React.MouseEvent<SVGSVGElement, MouseEvent>) =>
     dispatch(Actions.onDeleteCard(boardId, columnId, item.id));
-  };
 
   const onEditHandler = () => {
     dispatch(
